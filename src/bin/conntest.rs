@@ -22,7 +22,7 @@ fn main() {
             } else {
                 failure += 1;
             }
-            sleep(Duration::from_secs(1));
+            sleep(Duration::from_millis(200));
 
             println!(" --------------------------------------\n")
         }
@@ -53,9 +53,9 @@ fn fuzztest(device: &mut jlctl::device::Device) -> bool {
     let mut netlist = device.netlist().expect("get empty netlist");
 
     // number of nets to add
-    let extra_net_count = 2..=3u8;
+    let extra_net_count = 2..=4u8;
     // number of nodes to add
-    let nodes_per_net = 2..=4usize;
+    let nodes_per_net = 2..=5usize;
 
     let mut used_nodes = HashSet::new();
 
