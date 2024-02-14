@@ -1,0 +1,13 @@
+[package]
+name = "jumperless-oxide"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dot = "0.1.4"
+strum = { version = "0.26.1", features = ["derive"] }
+jlctl = { path = "../jlctl" }
+serde_json = "1.0.113"
+rand = "0.8.5"
