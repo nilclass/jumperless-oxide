@@ -8,6 +8,6 @@ edition = "2021"
 [dependencies]
 dot = "0.1.4"
 strum = { version = "0.26.1", features = ["derive"] }
-jlctl = { path = "../jlctl" }
+jlctl = { git = "https://github.com/nilclass/jlctl" }
 serde_json = "1.0.113"
 rand = "0.8.5"

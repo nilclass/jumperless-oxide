@@ -5,12 +5,17 @@ use std::thread::sleep;
 use std::time::Duration;
 use std::collections::HashSet;
 
+/// How many tests to run in a row?
+const TEST_COUNT: usize = 20;
+
 fn main() {
     DeviceManager::new(None).with_device(|device| {
         println!("Starting fuzztest");
         let mut success = 0;
         let mut failure = 0;
-        for i in 0..10 {
+
+        for i in 0..TEST_COUNT {
+
             println!("Fuzztest #{i}");
             if fuzztest(device) {
                 success += 1;
@@ -18,6 +23,8 @@ fn main() {
                 failure += 1;
             }
             sleep(Duration::from_secs(1));
+
+            println!(" --------------------------------------\n")
         }
 
         println!("Fuzztest complete: {} successes, {} failures", success, failure);
@@ -45,8 +52,8 @@ fn fuzztest(device: &mut jlctl::device::Device) -> bool {
     sleep(Duration::from_millis(300));
     let mut netlist = device.netlist().expect("get empty netlist");
 
-    let extra_net_count = 2..3u8;
-    let nodes_per_net = 2..4usize;
+    let extra_net_count = 2..=3u8;
+    let nodes_per_net = 2..=4usize;
 
     let mut used_nodes = HashSet::new();
 
@@ -87,7 +94,7 @@ fn fuzztest(device: &mut jlctl::device::Device) -> bool {
     let actual = chip_status_to_nets(chip_status.clone());
 
     if expected != actual {
-        println!("Netlists don't match!");
+        println!("Netlists don't match!\n");
         if expected.len() != actual.len() {
             println!("  Different number of nets: expected={}, actual={}", expected.len(), actual.len());
         }
@@ -97,19 +104,20 @@ fn fuzztest(device: &mut jlctl::device::Device) -> bool {
                 if net != *actual_net {
                     println!("  Net {} differs:", net.0);
                     println!("    Expected: {:?}", net.1);
-                    println!("    Actual:   {:?}", actual_net.1);
+                    println!("    Computed: {:?}", actual_net.1);
                 }
             } else {
                 println!("  Net {} is missing: {:?}", net.0, net.1);
             }
         }
 
-        println!("  Here come the netlist & chip status in JSON:");
+        println!("\n  Here come the netlist & chip status as JSON:");
         println!("    Netlist: {}", serde_json::to_string(&netlist).unwrap());
         println!("    Chipstatus: {}", serde_json::to_string(&chip_status).unwrap());
 
         false
     } else {
+        println!("  Success!");
         true
     }
 }
