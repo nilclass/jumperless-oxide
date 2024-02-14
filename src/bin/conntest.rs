@@ -52,14 +52,17 @@ fn fuzztest(device: &mut jlctl::device::Device) -> bool {
     sleep(Duration::from_millis(300));
     let mut netlist = device.netlist().expect("get empty netlist");
 
+    // number of nets to add
     let extra_net_count = 2..=3u8;
+    // number of nodes to add
     let nodes_per_net = 2..=4usize;
 
     let mut used_nodes = HashSet::new();
 
     let mut rng = rand::thread_rng();
 
-    // SKIP SPECIAL NETS FOR NOW
+    //   SKIP SPECIAL NETS FOR NOW, THEY ARE WEIRD
+    //
     // for net in netlist.iter_mut() {
     //     for _ in 0..rng.gen_range(nodes_per_net.clone()) {
     //         net.nodes.push(random_breadboard_node(&mut rng, &mut used_nodes));
